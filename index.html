@@ -109,7 +109,7 @@
     }
     @keyframes rise{
       0%   { transform: translate3d(0,0,0) rotate(-2deg); }
-      100% { transform: translate3d(var(--dx), -140vh, 0) rotate(3deg); }
+      100% { transform: translate3d(var(--dx), -132vh, 0) rotate(3deg); }
     }
 
     /* hearts */
@@ -126,7 +126,7 @@
     }
     @keyframes heartRise{
       0%{transform: translate3d(0,0,0) rotate(0deg)}
-      100%{transform: translate3d(var(--dx), -132vh, 0) rotate(var(--r))}
+      100%{transform: translate3d(var(--dx), -130vh, 0) rotate(var(--r))}
     }
 
     /* layout */
@@ -171,7 +171,6 @@
     @keyframes spin{to{transform: rotate(360deg)}}
     .content{position:relative; z-index:1; padding:18px;}
 
-    /* two column: LEFT text, RIGHT image */
     .grid{
       display:grid;
       grid-template-columns: 1.15fr .85fr;
@@ -254,6 +253,38 @@
       100%{transform: translateX(-90px) rotate(20deg)}
     }
 
+    /* NEW: gift box */
+    .giftBox{
+      margin-top: 12px;
+      padding: 14px;
+      border-radius: 18px;
+      background: rgba(255,255,255,.78);
+      border:1px solid rgba(0,210,211,.18);
+      box-shadow: 0 14px 30px rgba(0,0,0,.08);
+      position:relative;
+      overflow:hidden;
+    }
+    .giftTitle{
+      display:flex; align-items:center; gap:10px;
+      font-weight: 950;
+      letter-spacing:.2px;
+      margin-bottom: 6px;
+      font-size: 15px;
+    }
+    .giftTitle .icon{
+      width:34px; height:34px; border-radius:12px;
+      display:grid; place-items:center;
+      background: linear-gradient(135deg, rgba(0,210,211,.22), rgba(255,95,162,.18));
+      border:1px solid rgba(124,92,255,.14);
+      box-shadow: 0 10px 22px rgba(22,33,52,.08);
+    }
+    .giftText{
+      margin:0;
+      color:#2a3642;
+      font-size: 14.6px;
+      line-height:1.75;
+    }
+
     /* right photo */
     .photoShell{
       border-radius: 24px;
@@ -308,7 +339,6 @@
     .cap .name{font-weight:1000; font-size:18px}
     .cap .sub{color:var(--muted); font-size:13.3px; margin-top:6px; line-height:1.45}
 
-    /* tiny hint (only shown if music blocked) */
     .hint{
       margin-top: 10px;
       display:none;
@@ -322,7 +352,6 @@
     }
     .hint.show{display:block;}
 
-    /* reduce motion */
     @media (prefers-reduced-motion: reduce){
       *{animation:none !important; transition:none !important}
       #confetti,#balloons,#hearts,#sparkles{display:none}
@@ -348,9 +377,10 @@
     <div class="card">
       <div class="content">
         <div class="grid">
+
           <!-- LEFT: TEXT -->
           <div class="panel">
-            <div class="badge"><span class="dot"></span> Love balloons • Cute surprise • Happy Birthday 🎶</div>
+            <div class="badge"><span class="dot"></span> A small website gift — just for you 💝</div>
 
             <h1>Happy Birthday <span class="gradient">Pooja</span> 💖🎂</h1>
 
@@ -367,6 +397,20 @@
               Keep smiling and shining always. You deserve the best. 💛✨
             </div>
 
+            <!-- ✅ NEW: Gift message box -->
+            <div class="giftBox">
+              <div class="giftTitle">
+                <div class="icon">🎁</div>
+                This is my little birthday gift
+              </div>
+              <p class="giftText">
+                I made this small birthday website only for you, Pooja — because your friendship means a lot to me.
+                Even if it’s not a big gift, it comes with a big heart. 💖<br/><br/>
+                <b>What I want to gift you:</b> I want to gift you <b>more happiness</b>, <b>more success</b>, and
+                a life full of <b>beautiful moments</b>. May all your dreams come true and your smile never fade. ✨
+              </p>
+            </div>
+
             <div class="hint" id="musicHint">
               Music autoplay is blocked by some mobile browsers. Just <b>tap anywhere once</b> and it will start automatically.
             </div>
@@ -377,7 +421,6 @@
             <div class="photoGlow" aria-hidden="true"></div>
             <div class="photoFrame">
               <div class="photo">
-                <!-- ✅ Your photo -->
                 <img src="miss-pooja.jpeg" alt="Pooja Bhandari" />
               </div>
               <div class="cap">
@@ -413,11 +456,11 @@
       for(let i=0;i<count;i++){
         const b = document.createElement("div");
         b.className = "balloon";
-        const w = rand(42, 110);                // bigger
+        const w = rand(42, 110);
         b.style.setProperty("--w", w + "px");
         b.style.setProperty("--x", rand(0.5, 99) + "%");
         b.style.setProperty("--o", rand(0.28, 0.86));
-        b.style.setProperty("--d", rand(7.0, 13.5) + "s"); // faster
+        b.style.setProperty("--d", rand(7.0, 13.5) + "s");
         b.style.setProperty("--dx", rand(-95, 95) + "px");
         b.style.setProperty("--fill", balloonFill(i));
         const s = document.createElement("div");
@@ -448,7 +491,7 @@
       for(let i=0;i<count;i++){
         const h = document.createElement("div");
         h.className = "heart";
-        const s = rand(18, 46);                 // bigger hearts
+        const s = rand(18, 46);
         h.style.setProperty("--s", s + "px");
         h.style.setProperty("--x", rand(1, 98) + "%");
         h.style.setProperty("--o", rand(0.22, 0.72));
@@ -586,31 +629,23 @@
       if(!music) return;
       music.volume = 0.65;
 
-      // Try normal autoplay
       const p = music.play();
       if(p && typeof p.catch === "function"){
         p.catch(() => {
-          // If blocked, try muted autoplay (some browsers allow muted)
           music.muted = true;
           const p2 = music.play();
           if(p2 && typeof p2.catch === "function"){
-            p2.catch(() => {
-              // fully blocked (mobile rule)
-              hint.classList.add("show");
-            });
+            p2.catch(() => hint.classList.add("show"));
           } else {
-            // muted started, show hint and unmute on first touch
             hint.classList.add("show");
           }
         });
       }
     }
 
-    // Try multiple times
     window.addEventListener("load", () => { tryPlayMusic(); setTimeout(tryPlayMusic, 800); setTimeout(tryPlayMusic, 1800); });
     document.addEventListener("visibilitychange", () => { if(!document.hidden) tryPlayMusic(); });
 
-    // Unmute + ensure play on first touch ANYWHERE (no button)
     function unlock(){
       if(!music) return;
       tryPlayMusic();
