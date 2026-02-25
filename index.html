@@ -253,7 +253,7 @@
       100%{transform: translateX(-90px) rotate(20deg)}
     }
 
-    /* NEW: gift box */
+    /* gift box */
     .giftBox{
       margin-top: 12px;
       padding: 14px;
@@ -339,18 +339,33 @@
     .cap .name{font-weight:1000; font-size:18px}
     .cap .sub{color:var(--muted); font-size:13.3px; margin-top:6px; line-height:1.45}
 
-    .hint{
-      margin-top: 10px;
-      display:none;
-      padding: 10px 12px;
-      border-radius: 14px;
-      border: 1px dashed rgba(124,92,255,.22);
+    /* tap overlay for mobile audio */
+    #tapToPlay{
+      position:fixed; inset:0; z-index:9999;
+      display:none; place-items:center;
       background: rgba(255,255,255,.75);
-      color: var(--muted);
-      font-size: 12.8px;
-      line-height: 1.45;
+      backdrop-filter: blur(10px);
     }
-    .hint.show{display:block;}
+    #tapCard{
+      width:min(520px,calc(100% - 28px));
+      background: rgba(255,255,255,.92);
+      border:1px solid rgba(124,92,255,.18);
+      border-radius:22px;
+      box-shadow: 0 24px 70px rgba(22,33,52,.16);
+      padding:16px;
+      text-align:center;
+    }
+    #tapTitle{font-size:18px; font-weight:950; margin-bottom:6px}
+    #tapText{color:var(--muted); line-height:1.5; font-size:13.5px}
+    #startMusicBtn{
+      margin-top:12px; width:100%;
+      border:0; cursor:pointer;
+      padding:14px; border-radius:16px;
+      font-weight:900; font-size:15px;
+      color:white;
+      background: linear-gradient(135deg, #7c5cff, #00d2d3, #ff5fa2);
+      box-shadow: 0 16px 34px rgba(124,92,255,.18);
+    }
 
     @media (prefers-reduced-motion: reduce){
       *{animation:none !important; transition:none !important}
@@ -370,8 +385,17 @@
   <div class="blob b2"></div>
   <div class="blob b3"></div>
 
-  <!-- ✅ Put birthday.mp3 in the same folder -->
-  <audio id="bgMusic" src="birthday.mp3" autoplay loop playsinline></audio>
+  <!-- ✅ Put birthday.mp3 in same folder (index.html, birthday.mp3, miss-pooja.jpeg) -->
+  <audio id="bgMusic" src="birthday.mp3" loop playsinline preload="auto"></audio>
+
+  <!-- ✅ Mobile autoplay blocker overlay -->
+  <div id="tapToPlay">
+    <div id="tapCard">
+      <div id="tapTitle">🎶 Tap to play birthday music</div>
+      <div id="tapText">Mobile browsers block autoplay. Tap once and music will start.</div>
+      <button id="startMusicBtn">▶ Play Music</button>
+    </div>
+  </div>
 
   <div class="wrap">
     <div class="card">
@@ -385,9 +409,9 @@
             <h1>Happy Birthday <span class="gradient">Pooja</span> 💖🎂</h1>
 
             <p class="subtitle">
-              Friends since <b>5+ years</b> • Same BCA batch • You from <b>Dang College</b> and me from <b>Biratnagar College</b>.
-              Notes, projects, discussions — we helped each other through the whole bachelor journey.
-              I’m always grateful for you. ✨
+              Friends since <b>5+ years</b> • Same BCA batch • You from <b>Dang College</b> and me from <b>Biratnagar College</b>.<br/>
+              We shared notes, helped each other in projects, and discussed our syllabus a lot during our bachelor life.
+              Thank you for always being close and supportive. ✨
             </p>
 
             <div class="wish">
@@ -397,22 +421,18 @@
               Keep smiling and shining always. You deserve the best. 💛✨
             </div>
 
-            <!-- ✅ NEW: Gift message box -->
             <div class="giftBox">
               <div class="giftTitle">
                 <div class="icon">🎁</div>
-                This is my little birthday gift
+                This website is my birthday gift to you
               </div>
               <p class="giftText">
-                I made this small birthday website only for you, Pooja — because your friendship means a lot to me.
-                Even if it’s not a big gift, it comes with a big heart. 💖<br/><br/>
-                <b>What I want to gift you:</b> I want to gift you <b>more happiness</b>, <b>more success</b>, and
-                a life full of <b>beautiful moments</b>. May all your dreams come true and your smile never fade. ✨
+                Pooja, I made this small birthday website only for you — to make you smile and feel special today. 💖<br/><br/>
+                <b>What I want to gift you:</b> I wish I could gift you all the happiness in the world.
+                I want to gift you <b>more success</b>, <b>good health</b>, and <b>beautiful moments</b> in your life.
+                May your dreams come true, and may you always stay happy. ✨<br/><br/>
+                
               </p>
-            </div>
-
-            <div class="hint" id="musicHint">
-              Music autoplay is blocked by some mobile browsers. Just <b>tap anywhere once</b> and it will start automatically.
             </div>
           </div>
 
@@ -438,7 +458,7 @@
   <script>
     const rand = (min,max)=>Math.random()*(max-min)+min;
 
-    // ---------- MORE BALLOONS ----------
+    // ---------- BALLOONS ----------
     const balloonsWrap = document.getElementById("balloons");
     function balloonFill(i){
       const fills = [
@@ -472,7 +492,7 @@
     spawnBalloons();
     window.addEventListener("resize", spawnBalloons);
 
-    // ---------- MORE HEARTS ----------
+    // ---------- HEARTS ----------
     const heartsWrap = document.getElementById("hearts");
     const heartSVG = (fill)=>`
       <svg viewBox="0 0 32 32" width="100%" height="100%" aria-hidden="true">
@@ -505,7 +525,7 @@
     spawnHearts();
     window.addEventListener("resize", spawnHearts);
 
-    // ---------- AUTO SPARKLES LOOP ----------
+    // ---------- SPARKLES ----------
     function sparkleLoop(){
       const count = 18;
       for(let i=0;i<count;i++){
@@ -539,7 +559,7 @@
     }
     setInterval(sparkleLoop, 650);
 
-    // ---------- AUTO CONFETTI ON LOAD ----------
+    // ---------- CONFETTI ----------
     const canvas = document.getElementById("confetti");
     const ctx = canvas.getContext("2d");
     let W, H, rafId = null;
@@ -621,45 +641,59 @@
     }
     setTimeout(confettiAuto, 450);
 
-    // ---------- MUSIC AUTOPLAY (best effort) ----------
+    // ---------- MOBILE MUSIC FIX (reliable) ----------
     const music = document.getElementById("bgMusic");
-    const hint = document.getElementById("musicHint");
+    const overlay = document.getElementById("tapToPlay");
+    const btn = document.getElementById("startMusicBtn");
 
-    function tryPlayMusic(){
-      if(!music) return;
+    function isMobile(){
+      return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+    }
+
+    async function tryPlay(){
+      if(!music) return false;
       music.volume = 0.65;
-
-      const p = music.play();
-      if(p && typeof p.catch === "function"){
-        p.catch(() => {
-          music.muted = true;
-          const p2 = music.play();
-          if(p2 && typeof p2.catch === "function"){
-            p2.catch(() => hint.classList.add("show"));
-          } else {
-            hint.classList.add("show");
-          }
-        });
+      try{
+        await music.play();
+        return true;
+      }catch(e){
+        return false;
       }
     }
 
-    window.addEventListener("load", () => { tryPlayMusic(); setTimeout(tryPlayMusic, 800); setTimeout(tryPlayMusic, 1800); });
-    document.addEventListener("visibilitychange", () => { if(!document.hidden) tryPlayMusic(); });
-
-    function unlock(){
-      if(!music) return;
-      tryPlayMusic();
-      music.muted = false;
-      hint.classList.remove("show");
-      window.removeEventListener("pointerdown", unlock);
-      window.removeEventListener("touchstart", unlock);
-      window.removeEventListener("scroll", unlock);
-      window.removeEventListener("keydown", unlock);
+    async function startMusic(){
+      const ok = await tryPlay();
+      if(ok){
+        overlay.style.display = "none";
+      }else{
+        overlay.style.display = "grid";
+      }
     }
-    window.addEventListener("pointerdown", unlock, { once:true });
-    window.addEventListener("touchstart", unlock, { once:true });
-    window.addEventListener("scroll", unlock, { once:true });
-    window.addEventListener("keydown", unlock, { once:true });
+
+    // Try on load (desktop OK, mobile often blocked)
+    window.addEventListener("load", async ()=>{
+      const ok = await tryPlay();
+      if(!ok && isMobile()){
+        overlay.style.display = "grid";
+      }
+    });
+
+    // Start on button click
+    btn.addEventListener("click", startMusic);
+
+    // Also start on any tap anywhere (easy for mobile)
+    function unlockAnywhere(){
+      startMusic();
+      window.removeEventListener("pointerdown", unlockAnywhere);
+      window.removeEventListener("touchstart", unlockAnywhere);
+    }
+    window.addEventListener("pointerdown", unlockAnywhere, { once:true });
+    window.addEventListener("touchstart", unlockAnywhere, { once:true });
+
+    // iPhone safari extra
+    document.addEventListener("visibilitychange", ()=>{
+      if(!document.hidden) tryPlay();
+    });
   </script>
 </body>
 </html>
